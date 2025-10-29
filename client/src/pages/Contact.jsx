@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useTheme } from '../context/ThemeContext';
 import { Send, Mail, Phone, MapPin, Github, Linkedin, Twitter } from 'lucide-react';
+import { contactAPI } from '../utils/api';
 
 const Contact = () => {
   const { isDark } = useTheme();
@@ -27,8 +28,7 @@ const Contact = () => {
     setStatus({ type: '', message: '' });
 
     try {
-      // TODO: Replace with actual API call
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      await contactAPI.sendMessage(formData);
 
       setStatus({
         type: 'success',
@@ -38,7 +38,7 @@ const Contact = () => {
     } catch (error) {
       setStatus({
         type: 'error',
-        message: 'Failed to send message. Please try again.',
+        message: error.message || 'Failed to send message. Please try again.',
       });
     } finally {
       setLoading(false);

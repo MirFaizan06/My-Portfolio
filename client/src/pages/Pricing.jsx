@@ -2,16 +2,23 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useTheme } from '../context/ThemeContext';
 import { Check, Zap, Star, Crown, Sparkles } from 'lucide-react';
+import { pricingAPI } from '../utils/api';
 
 const Pricing = () => {
   const { isDark } = useTheme();
   const [pricingData, setPricingData] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Sample pricing data (replace with API call later)
+  // Fetch pricing data from API
   useEffect(() => {
-    setTimeout(() => {
-      setPricingData([
+    const fetchPricing = async () => {
+      try {
+        const response = await pricingAPI.getAll();
+        const apiPricing = response.data || [];
+
+        // If no pricing from API, use sample data
+        if (apiPricing.length === 0) {
+          setPricingData([
         {
           id: 1,
           name: 'Starter',
@@ -78,8 +85,31 @@ const Pricing = () => {
           popular: false,
         },
       ]);
-      setLoading(false);
-    }, 1000);
+        } else {
+          setPricingData(apiPricing);
+        }
+      } catch (error) {
+        console.error('Error fetching pricing:', error);
+        // Use sample data as fallback
+        setPricingData([
+          {
+            id: 1,
+            name: 'Starter',
+            icon: Zap,
+            price: '499',
+            period: 'project',
+            description: 'Perfect for small projects and MVPs',
+            color: 'from-blue-500 to-cyan-500',
+            features: ['Single Page Application', 'Responsive Design', 'Basic SEO Setup'],
+            popular: false,
+          },
+        ]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPricing();
   }, []);
 
   // Additional services

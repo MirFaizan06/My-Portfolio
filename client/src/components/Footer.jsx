@@ -2,16 +2,25 @@ import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { useTheme } from '../context/ThemeContext';
 import { Heart, Github, Linkedin, Mail, Coffee } from 'lucide-react';
+import { versionAPI } from '../utils/api';
 
 const Footer = () => {
   const { isDark } = useTheme();
   const [version, setVersion] = useState('1.0.0');
 
   useEffect(() => {
-    // TODO: Fetch version from API
-    // fetch('/api/version')
-    //   .then(res => res.json())
-    //   .then(data => setVersion(data.version));
+    const fetchVersion = async () => {
+      try {
+        const response = await versionAPI.get();
+        if (response.data?.version) {
+          setVersion(response.data.version);
+        }
+      } catch (error) {
+        console.error('Error fetching version:', error);
+      }
+    };
+
+    fetchVersion();
   }, []);
 
   const currentYear = new Date().getFullYear();

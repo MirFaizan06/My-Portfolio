@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from '../context/ThemeContext';
 import { ExternalLink, Github, Filter, Search } from 'lucide-react';
+import { projectsAPI } from '../utils/api';
 
 const Projects = () => {
   const { isDark } = useTheme();
@@ -9,12 +10,19 @@ const Projects = () => {
   const [filter, setFilter] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // Sample projects data (replace with API call later)
+  // Fetch projects from API
   useEffect(() => {
-    // Simulate API call
-    setTimeout(() => {
-      setProjects([
+    const fetchProjects = async () => {
+      try {
+        setLoading(true);
+        const response = await projectsAPI.getAll();
+        const apiProjects = response.data || [];
+
+        // If no projects from API, use sample data
+        if (apiProjects.length === 0) {
+          setProjects([
         {
           id: 1,
           title: 'E-Commerce Platform',
@@ -76,8 +84,31 @@ const Projects = () => {
           live: '#',
         },
       ]);
-      setLoading(false);
-    }, 1000);
+        } else {
+          setProjects(apiProjects);
+        }
+      } catch (err) {
+        console.error('Error fetching projects:', err);
+        setError(err.message);
+        // Use sample data as fallback
+        setProjects([
+          {
+            id: 1,
+            title: 'E-Commerce Platform',
+            description: 'Full-featured online store with payment integration, inventory management, and admin dashboard',
+            image: 'https://images.unsplash.com/photo-1557821552-17105176677c?w=400&h=300&fit=crop',
+            category: 'client',
+            tech: ['React', 'Node.js', 'MongoDB', 'Stripe'],
+            github: '#',
+            live: '#',
+          },
+        ]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProjects();
   }, []);
 
   const categories = [
