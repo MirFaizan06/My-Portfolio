@@ -1,255 +1,325 @@
-# 🚀 Portfolio Website - Mir Faizan (NxY)
+# Portfolio Website
 
-A modern, full-stack portfolio website with a stunning dark/light theme, smooth animations, and an admin panel for dynamic content management.
+A modern, full-stack portfolio website built with React, Node.js, Express, and Firebase. Features a complete admin panel for managing projects, pricing, resume content, and more.
 
-## ✨ Features
+![Portfolio Preview](https://via.placeholder.com/800x400?text=Portfolio+Preview)
+
+## Features
+
+### Public Features
+- 🏠 **Modern Landing Page** - Animated hero section with smooth scrolling
+- 📱 **Fully Responsive** - Works on all devices
+- 🎨 **Dark/Light Mode** - Theme toggle with persistent preference
+- 📂 **Projects Showcase** - Display your portfolio projects
+- 💰 **Pricing Plans** - Show your service offerings
+- 📄 **Dynamic Resume** - Experience, education, skills, and certifications
+- 📧 **Contact Form** - Get in touch functionality
+- 🎯 **Smooth Animations** - Powered by Framer Motion
+
+### Admin Features
+- 🔐 **Google OAuth Authentication** - Secure admin login
+- 📊 **Admin Dashboard** - Complete management interface
+- ✏️ **Project Management** - Full CRUD operations
+- 💵 **Pricing Management** - Create and manage pricing plans
+- 📝 **Resume Management** - Manage experience, education, skills, certifications
+- 📤 **File Uploads** - Upload images and PDF certificates
+- 🎭 **Custom Modals** - Beautiful, consistent UI feedback
+
+## Tech Stack
 
 ### Frontend
-- 🎨 **Modern UI/UX** - Clean, professional design with glassmorphism effects
-- 🌓 **Dark/Light Mode** - Toggle between gaming-inspired dark mode and professional light mode
-- ⚡ **Smooth Animations** - Framer Motion animations throughout
-- 📱 **Fully Responsive** - Mobile-first design, works on all devices
-- 🎯 **Dynamic Content** - Projects and pricing fetched from backend API
-- 📊 **Interactive Components** - Filterable projects, animated pricing cards
-- 📝 **Contact Form** - Easy-to-use contact form with validation
-- 📄 **Resume Page** - Detailed resume with download functionality
+- **React 19** - UI library
+- **Vite** - Build tool and dev server
+- **React Router** - Navigation
+- **Tailwind CSS** - Styling
+- **Framer Motion** - Animations
+- **Firebase** - Authentication & Storage
+- **Lucide React** - Icons
 
 ### Backend
-- 🔐 **Google OAuth** - Secure authentication (restricted to specific email)
-- 🛡️ **Protected API Routes** - JWT-based authentication
-- 📦 **File Upload** - Firebase Storage integration for images and PDFs
-- 🔄 **Version Tracking** - Automatic version management
-- 🗄️ **RESTful API** - Clean API structure for all resources
+- **Node.js** - Runtime
+- **Express** - Web framework
+- **Firebase Admin SDK** - Database & Auth
+- **Firestore** - NoSQL database
+- **Firebase Storage** - File storage
 
-### Tech Stack
-
-**Frontend:**
-- React 19 + Vite
-- TailwindCSS v4 (with @theme syntax)
-- Framer Motion
-- React Router
-- Lucide React Icons
-- Chart.js
-
-**Backend:**
-- Node.js + Express
-- Firebase Admin SDK
-- Google Auth Library
-- JWT + Bcrypt
-- Multer (file uploads)
-
-## 🏗️ Project Structure
+## Project Structure
 
 ```
-portfolio/
-├── client/                # React frontend
+My Portfolio/
+├── client/                 # Frontend (React + Vite)
 │   ├── src/
-│   │   ├── components/   # Reusable components (Navbar, Footer)
-│   │   ├── pages/        # Page components (Home, Projects, etc.)
-│   │   ├── context/      # React Context (Theme)
-│   │   ├── assets/       # Static assets
-│   │   └── utils/        # Utility functions
-│   ├── index.html
-│   ├── vite.config.js
+│   │   ├── components/    # Reusable components
+│   │   ├── context/       # React context providers
+│   │   ├── pages/         # Page components
+│   │   ├── utils/         # Utility functions
+│   │   └── config/        # Firebase config
+│   ├── public/            # Static assets
 │   └── package.json
 │
-├── server/               # Express backend
+├── server/                # Backend (Node.js + Express)
 │   ├── src/
-│   │   ├── routes/      # API routes
-│   │   ├── controllers/ # Route controllers
-│   │   ├── middlewares/ # Auth & other middleware
-│   │   └── config/      # Configuration files
-│   ├── version.json     # Version tracking
+│   │   ├── config/        # Firebase admin config
+│   │   ├── controllers/   # Route controllers
+│   │   ├── middleware/    # Custom middleware
+│   │   └── routes/        # API routes
 │   └── package.json
 │
-├── firebase/            # Firebase configuration
-│   ├── firebaseAdmin.js
-│   └── serviceAccountKey.json (you'll add this)
-│
+├── RAILWAY_DEPLOYMENT_GUIDE.md  # Detailed Railway deployment guide
+├── DEPLOYMENT_CHECKLIST.md      # Quick deployment checklist
 └── README.md
 ```
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 - Node.js (v18 or higher)
 - npm or yarn
-- Firebase project (for storage & auth)
-- Google Cloud Console project (for OAuth)
+- Firebase account
+- Git
 
-### Installation
+### 1. Clone the Repository
 
-1. **Clone the repository** (or you're already in it!)
-
-2. **Install Client Dependencies**
-   ```bash
-   cd client
-   npm install
-   ```
-
-3. **Install Server Dependencies**
-   ```bash
-   cd ../server
-   npm install
-   ```
-
-### Configuration
-
-#### 1. Firebase Setup
-
-1. Go to [Firebase Console](https://console.firebase.google.com/)
-2. Create a new project (or use existing)
-3. Enable **Firebase Storage**
-4. Go to **Project Settings** → **Service Accounts**
-5. Click **Generate New Private Key**
-6. Save the JSON file as `serviceAccountKey.json` in the `firebase/` folder
-7. Get your web app config (Project Settings → General → Your apps)
-
-#### 2. Google OAuth Setup
-
-1. Go to [Google Cloud Console](https://console.cloud.google.com/)
-2. Create a new project or select existing
-3. Enable **Google+ API**
-4. Go to **Credentials** → **Create Credentials** → **OAuth 2.0 Client ID**
-5. Configure consent screen
-6. Add authorized origins: `http://localhost:5173` and `http://localhost:5000`
-7. Copy the Client ID
-
-#### 3. Environment Variables
-
-**Client (.env)**
 ```bash
-cd client
-cp .env.example .env
-# Edit .env with your Firebase and Google OAuth credentials
+git clone https://github.com/YOUR_USERNAME/YOUR_REPO.git
+cd "My Portfolio"
 ```
 
-**Server (.env)**
+### 2. Firebase Setup
+
+1. Create a Firebase project at [Firebase Console](https://console.firebase.google.com/)
+2. Enable **Authentication** → Google sign-in method
+3. Create **Firestore Database** (start in production mode)
+4. Enable **Firebase Storage**
+5. Download service account key:
+   - Go to Project Settings → Service Accounts
+   - Click "Generate new private key"
+   - Save as `server/src/config/serviceAccountKey.json`
+
+### 3. Backend Setup
+
 ```bash
 cd server
-cp .env.example .env
-# Edit .env with your configuration
+npm install
 ```
 
-### Running the Application
+Create `.env` file in `server/` directory:
 
-#### Development Mode
+```env
+PORT=5000
+NODE_ENV=development
+CLIENT_URL=http://localhost:5173
 
-**Terminal 1 - Start Backend:**
-```bash
-cd server
-npm run dev
-```
-Server will run on `http://localhost:5000`
+# From serviceAccountKey.json
+FIREBASE_PROJECT_ID=your-project-id
+FIREBASE_CLIENT_EMAIL=firebase-adminsdk-xxxxx@your-project-id.iam.gserviceaccount.com
+FIREBASE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\nYOUR_KEY_HERE\n-----END PRIVATE KEY-----"
 
-**Terminal 2 - Start Frontend:**
-```bash
-cd client
-npm run dev
-```
-Frontend will run on `http://localhost:5173`
+# From Firebase Project Settings → General
+FIREBASE_API_KEY=your-api-key
+FIREBASE_AUTH_DOMAIN=your-project-id.firebaseapp.com
+FIREBASE_STORAGE_BUCKET=your-project-id.appspot.com
+FIREBASE_MESSAGING_SENDER_ID=your-sender-id
+FIREBASE_APP_ID=your-app-id
 
-#### Production Build
-
-**Build Client:**
-```bash
-cd client
-npm run build
+# Your Google account email for admin access
+ADMIN_EMAIL=your-email@gmail.com
 ```
 
-**Start Server:**
+Start the backend:
+
 ```bash
-cd server
 npm start
 ```
 
-## 📖 API Documentation
+Backend will run at: `http://localhost:5000`
+
+### 4. Frontend Setup
+
+```bash
+cd client
+npm install
+```
+
+Create `.env` file in `client/` directory:
+
+```env
+VITE_API_URL=http://localhost:5000/api
+
+# Same Firebase config as backend
+VITE_FIREBASE_API_KEY=your-api-key
+VITE_FIREBASE_AUTH_DOMAIN=your-project-id.firebaseapp.com
+VITE_FIREBASE_PROJECT_ID=your-project-id
+VITE_FIREBASE_STORAGE_BUCKET=your-project-id.appspot.com
+VITE_FIREBASE_MESSAGING_SENDER_ID=your-sender-id
+VITE_FIREBASE_APP_ID=your-app-id
+```
+
+Start the frontend:
+
+```bash
+npm run dev
+```
+
+Frontend will run at: `http://localhost:5173`
+
+### 5. Access Admin Panel
+
+1. Visit `http://localhost:5173/admin/login`
+2. Click "Sign in with Google"
+3. Sign in with the email you set as `ADMIN_EMAIL`
+4. You'll be redirected to the admin dashboard
+
+## Firestore Collections
+
+The app uses these Firestore collections:
+
+- `projects` - Portfolio projects
+- `pricing` - Pricing plans
+- `resume_experiences` - Work experience
+- `resume_education` - Education history
+- `resume_skills` - Skills by category
+- `resume_certifications` - Certifications with optional PDFs
+
+## API Endpoints
 
 ### Public Endpoints
+```
+GET  /api/projects           # Get all projects
+GET  /api/pricing            # Get all pricing plans
+GET  /api/resume/experiences # Get all experiences
+GET  /api/resume/education   # Get all education
+GET  /api/resume/skills      # Get all skills
+GET  /api/resume/certifications # Get certifications
+GET  /api/health             # Health check
+```
 
-- `GET /api/projects` - Get all projects
-- `GET /api/projects/:id` - Get single project
-- `GET /api/pricing` - Get all pricing plans
-- `GET /api/pricing/:id` - Get single pricing plan
-- `GET /api/version` - Get current version
-- `GET /api/health` - Health check
+### Protected Endpoints (Admin only)
+```
+POST   /api/projects         # Create project
+PUT    /api/projects/:id     # Update project
+DELETE /api/projects/:id     # Delete project
 
-### Protected Endpoints (Require Auth)
+POST   /api/pricing          # Create pricing plan
+PUT    /api/pricing/:id      # Update pricing plan
+DELETE /api/pricing/:id      # Delete pricing plan
 
-- `POST /api/auth/google` - Google OAuth login
-- `GET /api/auth/verify` - Verify authentication
-- `POST /api/projects` - Create project
-- `PUT /api/projects/:id` - Update project
-- `DELETE /api/projects/:id` - Delete project
-- `POST /api/pricing` - Create pricing plan
-- `PUT /api/pricing/:id` - Update pricing plan
-- `DELETE /api/pricing/:id` - Delete pricing plan
-- `POST /api/upload` - Upload file
-- `DELETE /api/upload/:filename` - Delete file
-- `POST /api/version` - Update version
+POST   /api/resume/experiences # Create experience
+PUT    /api/resume/experiences/:id # Update experience
+DELETE /api/resume/experiences/:id # Delete experience
+# ... similar for education, skills, certifications
 
-## 🎨 Customization
+POST   /api/upload           # Upload file
+DELETE /api/upload/:filename # Delete file
+```
 
-### Colors & Theme
+### Authentication
+```
+POST /api/auth/google        # Google OAuth login
+GET  /api/auth/verify        # Verify auth token
+```
 
-Edit `client/src/index.css` to customize colors:
-- Light mode colors: `--color-light-*`
-- Dark mode colors: `--color-dark-*`
-- Gradients: `--gradient-*`
+## Deployment
 
-### Fonts
+### Deploy to Railway
 
-Fonts are defined in `client/index.html` (Google Fonts) and `client/src/index.css`:
-- Sans-serif: Inter
-- Display: Space Grotesk
+Follow the comprehensive guides:
+- **[Railway Deployment Guide](./RAILWAY_DEPLOYMENT_GUIDE.md)** - Detailed step-by-step instructions
+- **[Deployment Checklist](./DEPLOYMENT_CHECKLIST.md)** - Quick checklist for deployment
 
-## 🔐 Admin Panel
+Quick deployment steps:
 
-Access the admin panel at `/admin` (coming soon!)
+1. Push your code to GitHub
+2. Create a Railway account
+3. Create a new project from GitHub repo
+4. Deploy backend:
+   - Set root directory to `server`
+   - Add environment variables
+   - Generate domain
+5. Deploy frontend:
+   - Set root directory to `client`
+   - Add environment variables
+   - Generate domain
+6. Update CORS settings
+7. Add domains to Firebase authorized domains
 
-**Features:**
-- Google Sign-In only
-- Restricted to `mirfaizan8803@gmail.com`
-- Add/Edit/Delete projects
-- Add/Edit/Delete pricing
-- Upload CV/Images
-- View analytics
+Estimated cost: **$10-18/month** on Railway
 
-## 📝 Version Tracking
+## Development
 
-The project automatically tracks versions in `server/version.json`.
-The current version is displayed in the footer.
+### Run Both Services Concurrently
 
-**Initial Version:** v1.0.0
+Install `concurrently` globally:
+```bash
+npm install -g concurrently
+```
 
-## 🚧 Roadmap
+From root directory:
+```bash
+concurrently "cd server && npm start" "cd client && npm run dev"
+```
 
-- [ ] Complete Admin Panel UI
-- [ ] Integrate Firestore for data persistence
-- [ ] Add blog section
-- [ ] Email notifications for contact form
-- [ ] Analytics dashboard
-- [ ] "Buy Me a Coffee" integration
-- [ ] SEO optimization
-- [ ] Performance optimization
-- [ ] Unit & E2E tests
+### Code Style
 
-## 🤝 Contributing
+- ESLint configured for React
+- Use functional components with hooks
+- Follow existing naming conventions
+- Keep components modular and reusable
+
+## Environment Variables
+
+See `.env.example` files in both `client/` and `server/` directories for all required variables.
+
+## Security
+
+- Admin access restricted to `ADMIN_EMAIL`
+- Firebase security rules for authenticated users
+- CORS configured for specific origins
+- Helmet.js for HTTP headers security
+- Environment variables never committed to git
+
+## Browser Support
+
+- Chrome (latest)
+- Firefox (latest)
+- Safari (latest)
+- Edge (latest)
+
+## Performance
+
+- Lazy loading for images
+- Code splitting with React Router
+- Vite for fast builds and HMR
+- Optimized bundle size
+
+## Contributing
 
 This is a personal portfolio project, but suggestions and feedback are welcome!
 
-## 📄 License
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Submit a pull request
 
-MIT License - feel free to use this as a template for your own portfolio!
+## License
 
-## 📧 Contact
+MIT License - feel free to use this project as a template for your own portfolio!
 
-**Mir Faizan (NxY)**
-- Email: mirfaizan8803@gmail.com
-- GitHub: [@mirfaizan8803](https://github.com/mirfaizan8803)
+## Acknowledgments
+
+- [Tailwind CSS](https://tailwindcss.com/)
+- [Framer Motion](https://www.framer.com/motion/)
+- [Lucide Icons](https://lucide.dev/)
+- [Firebase](https://firebase.google.com/)
+- [Railway](https://railway.app/)
+
+## Contact
+
+For questions or feedback:
+- Email: [your-email@example.com](mailto:your-email@example.com)
+- GitHub: [@yourusername](https://github.com/yourusername)
+- Portfolio: [yourportfolio.com](https://yourportfolio.com)
 
 ---
 
-Made with ❤️ using React, TailwindCSS, and Node.js
-
-🤖 Generated with [Claude Code](https://claude.com/claude-code)
+Built with ❤️ using React and Node.js
