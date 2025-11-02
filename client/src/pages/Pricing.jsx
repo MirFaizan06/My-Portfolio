@@ -1,128 +1,94 @@
 import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from '../context/ThemeContext';
-import { Check, Zap, Star, Crown, Sparkles } from 'lucide-react';
-import { pricingAPI } from '../utils/api';
+import { Check, Zap, Star, Crown, Sparkles, Globe } from 'lucide-react';
+import { pricingAPI, servicesAPI } from '../utils/api';
+import {
+  SUPPORTED_CURRENCIES,
+  fetchExchangeRates,
+  convertPrice,
+  formatPrice,
+  getUserCurrency,
+} from '../utils/currency';
+
+// Helper function to get icon component based on plan name
+const getIconForPlan = (planName) => {
+  const name = planName?.toLowerCase() || '';
+  if (name.includes('starter') || name.includes('basic')) return Zap;
+  if (name.includes('professional') || name.includes('pro')) return Star;
+  if (name.includes('enterprise') || name.includes('premium')) return Crown;
+  return Star; // Default icon
+};
 
 const Pricing = () => {
   const { isDark } = useTheme();
   const [pricingData, setPricingData] = useState([]);
+  const [servicesData, setServicesData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [selectedCurrency, setSelectedCurrency] = useState('USD');
+  const [exchangeRates, setExchangeRates] = useState({});
+  const [showCurrencyDropdown, setShowCurrencyDropdown] = useState(false);
 
-  // Fetch pricing data from API
+  // Initialize currency and fetch exchange rates
+  useEffect(() => {
+    const initCurrency = async () => {
+      try {
+        // Fetch exchange rates
+        const rates = await fetchExchangeRates();
+        setExchangeRates(rates);
+
+        // Get user's currency based on location
+        const userCurrency = await getUserCurrency();
+        setSelectedCurrency(userCurrency);
+      } catch (error) {
+        console.error('Error initializing currency:', error);
+      }
+    };
+
+    initCurrency();
+  }, []);
+
+  // Fetch pricing and services data from API
   useEffect(() => {
     const fetchPricing = async () => {
       try {
         const response = await pricingAPI.getAll();
         const apiPricing = response.data || [];
-
-        // If no pricing from API, use sample data
-        if (apiPricing.length === 0) {
-          setPricingData([
-        {
-          id: 1,
-          name: 'Starter',
-          icon: Zap,
-          price: '499',
-          period: 'project',
-          description: 'Perfect for small projects and MVPs',
-          color: 'from-blue-500 to-cyan-500',
-          features: [
-            'Single Page Application',
-            'Responsive Design',
-            'Basic SEO Setup',
-            'Contact Form Integration',
-            '2 Revisions Included',
-            '7 Days Delivery',
-            'Basic Documentation',
-          ],
-          popular: false,
-        },
-        {
-          id: 2,
-          name: 'Professional',
-          icon: Star,
-          price: '999',
-          period: 'project',
-          description: 'Ideal for business websites and web apps',
-          color: 'from-purple-500 to-pink-500',
-          features: [
-            'Multi-Page Application',
-            'Custom Design & Animation',
-            'Advanced SEO & Analytics',
-            'CMS Integration',
-            'API Development',
-            '5 Revisions Included',
-            '14 Days Delivery',
-            'Admin Dashboard',
-            'Email Support',
-            'Deployment Assistance',
-          ],
-          popular: true,
-        },
-        {
-          id: 3,
-          name: 'Enterprise',
-          icon: Crown,
-          price: '2499',
-          period: 'project',
-          description: 'For complex applications and full solutions',
-          color: 'from-orange-500 to-red-500',
-          features: [
-            'Full-Stack Application',
-            'Custom Architecture',
-            'Complete SEO & Marketing Setup',
-            'Advanced Backend & Database',
-            'Third-party Integrations',
-            'Unlimited Revisions',
-            '30 Days Delivery',
-            'Advanced Admin Panel',
-            'User Authentication & Authorization',
-            'Real-time Features',
-            'Priority Support',
-            '3 Months Free Maintenance',
-          ],
-          popular: false,
-        },
-      ]);
-        } else {
-          setPricingData(apiPricing);
-        }
+        setPricingData(apiPricing);
       } catch (error) {
         console.error('Error fetching pricing:', error);
-        // Use sample data as fallback
-        setPricingData([
-          {
-            id: 1,
-            name: 'Starter',
-            icon: Zap,
-            price: '499',
-            period: 'project',
-            description: 'Perfect for small projects and MVPs',
-            color: 'from-blue-500 to-cyan-500',
-            features: ['Single Page Application', 'Responsive Design', 'Basic SEO Setup'],
-            popular: false,
-          },
-        ]);
+        setPricingData([]);
       } finally {
         setLoading(false);
       }
     };
 
     fetchPricing();
+    fetchServices();
   }, []);
 
-  // Additional services
-  const additionalServices = [
-    { service: 'Mobile App Development', price: '$1,500+', turnaround: '3-4 weeks' },
-    { service: 'UI/UX Design', price: '$300', turnaround: '3-5 days' },
-    { service: 'API Development', price: '$500', turnaround: '1 week' },
-    { service: 'Database Design & Setup', price: '$400', turnaround: '3-5 days' },
-    { service: 'E-commerce Integration', price: '$800', turnaround: '1-2 weeks' },
-    { service: 'Performance Optimization', price: '$350', turnaround: '2-3 days' },
-    { service: 'SEO & Analytics Setup', price: '$250', turnaround: '2-3 days' },
-    { service: 'Monthly Maintenance', price: '$200/mo', turnaround: 'Ongoing' },
-  ];
+  // Fetch additional services
+  const fetchServices = async () => {
+    try {
+      const response = await servicesAPI.getAll();
+      setServicesData(response.data || []);
+    } catch (error) {
+      console.error('Error fetching services:', error);
+      setServicesData([]);
+    }
+  };
+
+  // Convert prices to selected currency
+  const getConvertedPrice = (priceUSD) => {
+    const converted = convertPrice(priceUSD, selectedCurrency, exchangeRates);
+    return formatPrice(converted, selectedCurrency);
+  };
+
+  const additionalServices = servicesData.map(service => ({
+    service: service.service,
+    price: getConvertedPrice(service.priceUSD) + (service.isStartingPrice ? '+' : '') + (service.isMonthly ? '/mo' : ''),
+    turnaround: service.turnaround,
+  }));
 
   return (
     <div
@@ -142,15 +108,92 @@ const Pricing = () => {
               isDark ? 'text-white' : 'text-gray-900'
             }`}
           >
-            Simple, <span className="gradient-text">Transparent</span> Pricing
+            Simple, <span className="gradient-text bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-500">Transparent</span> Pricing
           </h1>
           <p
-            className={`text-lg ${
+            className={`text-lg mb-6 ${
               isDark ? 'text-gray-400' : 'text-gray-600'
             }`}
           >
             Choose the perfect plan for your project needs
           </p>
+
+          {/* Currency Selector */}
+          <div className="flex justify-center">
+            <div className="relative inline-block">
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => setShowCurrencyDropdown(!showCurrencyDropdown)}
+                className={`flex items-center gap-2 px-6 py-3 rounded-xl font-medium transition-all ${
+                  isDark
+                    ? 'bg-gray-800 text-white hover:bg-gray-700 border border-gray-700'
+                    : 'bg-white text-gray-900 hover:bg-gray-50 border border-gray-300'
+                } shadow-lg`}
+              >
+                <Globe size={20} />
+                <span className="text-xl">{SUPPORTED_CURRENCIES[selectedCurrency]?.flag}</span>
+                <span>{selectedCurrency} - {SUPPORTED_CURRENCIES[selectedCurrency]?.symbol}</span>
+              </motion.button>
+
+              {/* Currency Dropdown */}
+              <AnimatePresence>
+                {showCurrencyDropdown && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    className={`absolute top-full mt-2 left-0 right-0 rounded-xl overflow-hidden shadow-2xl z-50 ${
+                      isDark ? 'bg-gray-800 border border-gray-700' : 'bg-white border border-gray-200'
+                    }`}
+                  >
+                    <div className="max-h-96 overflow-y-auto">
+                      {Object.entries(SUPPORTED_CURRENCIES).map(([code, info]) => (
+                        <motion.button
+                          key={code}
+                          whileHover={{ scale: 1.02 }}
+                          onClick={() => {
+                            setSelectedCurrency(code);
+                            setShowCurrencyDropdown(false);
+                          }}
+                          className={`w-full px-4 py-3 text-left flex items-center gap-3 transition-colors ${
+                            selectedCurrency === code
+                              ? isDark
+                                ? 'bg-gradient-to-r from-cyan-900/50 to-purple-900/50'
+                                : 'bg-gradient-to-r from-blue-50 to-indigo-50'
+                              : isDark
+                              ? 'hover:bg-gray-700'
+                              : 'hover:bg-gray-50'
+                          }`}
+                        >
+                          <span className="text-2xl">{info.flag}</span>
+                          <div className="flex-1">
+                            <div
+                              className={`font-medium ${
+                                isDark ? 'text-white' : 'text-gray-900'
+                              }`}
+                            >
+                              {code} - {info.symbol}
+                            </div>
+                            <div
+                              className={`text-sm ${
+                                isDark ? 'text-gray-400' : 'text-gray-600'
+                              }`}
+                            >
+                              {info.name}
+                            </div>
+                          </div>
+                          {selectedCurrency === code && (
+                            <Check className="text-green-500" size={20} />
+                          )}
+                        </motion.button>
+                      ))}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          </div>
         </motion.div>
 
         {/* Pricing Cards */}
@@ -165,6 +208,22 @@ const Pricing = () => {
               />
             ))}
           </div>
+        ) : pricingData.length === 0 ? (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className={`text-center py-20 px-6 rounded-2xl ${
+              isDark ? 'bg-gray-800/50 border border-gray-700' : 'bg-white border border-gray-200'
+            }`}
+          >
+            <Sparkles size={64} className={`mx-auto mb-6 ${isDark ? 'text-cyan-400' : 'text-blue-600'}`} />
+            <h3 className={`text-2xl font-bold mb-4 ${isDark ? 'text-white' : 'text-gray-900'}`}>
+              No Pricing Plans Available Yet
+            </h3>
+            <p className={`text-lg ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+              Check back soon! Pricing plans will be available shortly.
+            </p>
+          </motion.div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-20">
             {pricingData.map((plan, index) => (
@@ -195,9 +254,12 @@ const Pricing = () => {
                 <div className="p-8">
                   {/* Icon */}
                   <div
-                    className={`inline-flex p-3 rounded-xl bg-gradient-to-br ${plan.color} mb-4`}
+                    className={`inline-flex p-3 rounded-xl bg-gradient-to-br ${plan.color || 'from-blue-500 to-cyan-500'} mb-4`}
                   >
-                    <plan.icon className="text-white" size={32} />
+                    {(() => {
+                      const IconComponent = plan.icon || getIconForPlan(plan.name);
+                      return <IconComponent className="text-white" size={32} />;
+                    })()}
                   </div>
 
                   {/* Plan Name */}
@@ -225,7 +287,7 @@ const Pricing = () => {
                         isDark ? 'text-white' : 'text-gray-900'
                       }`}
                     >
-                      ${plan.price}
+                      {getConvertedPrice(parseFloat(plan.price))}
                     </span>
                     <span
                       className={`text-lg ${
@@ -342,7 +404,16 @@ const Pricing = () => {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-700">
-                  {additionalServices.map((service, index) => (
+                  {additionalServices.length === 0 ? (
+                    <tr>
+                      <td colSpan="3" className="px-6 py-12 text-center">
+                        <p className={`text-lg ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+                          No additional services available yet
+                        </p>
+                      </td>
+                    </tr>
+                  ) : (
+                    additionalServices.map((service, index) => (
                     <motion.tr
                       key={service.service}
                       initial={{ opacity: 0, x: -20 }}
@@ -377,7 +448,8 @@ const Pricing = () => {
                         {service.turnaround}
                       </td>
                     </motion.tr>
-                  ))}
+                    ))
+                  )}
                 </tbody>
               </table>
             </div>

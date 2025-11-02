@@ -22,12 +22,32 @@ const AdminLogin = () => {
     setLoading(true);
     setErrorMessage('');
 
-    const result = await signInWithGoogle();
+    try {
+      const result = await signInWithGoogle();
 
-    if (result.success) {
-      navigate('/admin/dashboard');
-    } else {
-      setErrorMessage(result.error || 'Authentication failed. Please try again.');
+      if (result.success) {
+        navigate('/admin/dashboard');
+      } else {
+        // Provide helpful error messages based on error type
+        let friendlyError = result.error || 'Authentication failed. Please try again.';
+
+        if (result.error?.includes('auth/configuration-not-found')) {
+          friendlyError = '⚠️ Firebase Authentication not configured. Please enable Google Sign-In in Firebase Console. Check FIREBASE_SETUP_GUIDE.md for instructions.';
+        } else if (result.error?.includes('auth/unauthorized-domain')) {
+          friendlyError = '⚠️ This domain is not authorized. Add localhost to Firebase authorized domains.';
+        } else if (result.error?.includes('auth/popup-blocked')) {
+          friendlyError = '⚠️ Popup was blocked. Please allow popups for this site.';
+        } else if (result.error?.includes('auth/popup-closed-by-user')) {
+          friendlyError = 'Sign-in was cancelled. Please try again.';
+        } else if (result.error?.includes('Access denied')) {
+          friendlyError = '🚫 Access denied. Only mirfaizan8803@gmail.com can access this admin panel.';
+        }
+
+        setErrorMessage(friendlyError);
+      }
+    } catch (err) {
+      console.error('Sign-in error:', err);
+      setErrorMessage(`Error: ${err.message || 'An unexpected error occurred'}`);
     }
 
     setLoading(false);
@@ -175,6 +195,25 @@ const AdminLogin = () => {
         >
           Only authorized administrators can access this panel
         </motion.p>
+
+        {/* Help Link */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.7 }}
+          className="text-center mt-4"
+        >
+          <a
+            href="https://console.firebase.google.com/project/_/authentication"
+            target="_blank"
+            rel="noopener noreferrer"
+            className={`text-xs hover:underline ${
+              isDark ? 'text-cyan-400' : 'text-blue-600'
+            }`}
+          >
+            Having trouble? Check Firebase Console →
+          </a>
+        </motion.div>
       </motion.div>
     </div>
   );

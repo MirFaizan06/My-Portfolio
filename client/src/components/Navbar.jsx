@@ -35,8 +35,8 @@ const Navbar = () => {
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         isScrolled
           ? isDark
-            ? 'glass-dark shadow-lg'
-            : 'glass-light shadow-lg'
+            ? 'bg-dark-surface/80 backdrop-blur-xl border-b border-dark-border shadow-lg'
+            : 'bg-white/80 backdrop-blur-xl border-b border-light-border shadow-lg'
           : 'bg-transparent'
       }`}
     >
@@ -56,7 +56,7 @@ const Navbar = () => {
                 isDark ? 'text-white' : 'text-gray-900'
               }`}
             >
-              NxY
+              NxT
             </span>
           </Link>
 

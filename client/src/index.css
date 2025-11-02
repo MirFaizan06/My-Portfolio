@@ -2,9 +2,9 @@
 
 /* Custom Theme Variables */
 @theme {
-  /* Fonts */
-  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
-  --font-display: 'Space Grotesk', system-ui, sans-serif;
+  /* Enhanced Font System */
+  --font-sans: 'Inter', 'SF Pro Display', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  --font-display: 'Space Grotesk', 'SF Pro Display', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
 
   /* Light Mode Colors */
   --color-light-bg: #ffffff;
@@ -16,7 +16,7 @@
   --color-light-accent: #6366f1;
   --color-light-border: #e2e8f0;
 
-  /* Dark Mode Colors - Gaming Inspired */
+  /* Dark Mode Colors */
   --color-dark-bg: #0a0e1a;
   --color-dark-surface: #131827;
   --color-dark-text: #f1f5f9;
@@ -26,108 +26,12 @@
   --color-dark-accent: #a855f7;
   --color-dark-accent-secondary: #ec4899;
   --color-dark-border: #1e293b;
-  --color-dark-glow: #06b6d433;
-
-  /* Gradient Colors */
-  --gradient-primary: linear-gradient(135deg, #06b6d4 0%, #a855f7 100%);
-  --gradient-secondary: linear-gradient(135deg, #3b82f6 0%, #6366f1 100%);
 }
 
-/* Base Styles */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-html {
-  scroll-behavior: smooth;
-}
-
-body {
-  font-family: var(--font-sans);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-/* Glassmorphism utility classes */
-.glass-light {
-  background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-}
-
-.glass-dark {
-  background: rgba(19, 24, 39, 0.7);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-/* Glow effects for dark mode */
-.glow-cyan {
-  box-shadow: 0 0 20px rgba(6, 182, 212, 0.3);
-}
-
-.glow-purple {
-  box-shadow: 0 0 20px rgba(168, 85, 247, 0.3);
-}
-
-.glow-hover:hover {
-  box-shadow: 0 0 30px rgba(6, 182, 212, 0.5);
-  transition: box-shadow 0.3s ease-in-out;
-}
-
-/* Gradient text */
+/* Gradient Text - Keep this as it's not available in Tailwind */
 .gradient-text {
-  background: var(--gradient-primary);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
-/* Custom scrollbar for dark mode */
-::-webkit-scrollbar {
-  width: 10px;
-}
-
-::-webkit-scrollbar-track {
-  background: var(--color-dark-bg);
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--color-dark-primary);
-  border-radius: 5px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: var(--color-dark-primary-hover);
-}
-
-/* Animation keyframes */
-@keyframes float {
-  0%, 100% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-20px);
-  }
-}
-
-@keyframes pulse-glow {
-  0%, 100% {
-    box-shadow: 0 0 20px rgba(6, 182, 212, 0.3);
-  }
-  50% {
-    box-shadow: 0 0 40px rgba(6, 182, 212, 0.6);
-  }
-}
-
-.animate-float {
-  animation: float 3s ease-in-out infinite;
-}
-
-.animate-pulse-glow {
-  animation: pulse-glow 2s ease-in-out infinite;
-}

@@ -1,4 +1,4 @@
-import { bucket } from '../../firebase/firebaseAdmin.js';
+import { bucket } from '../config/firebase.js';
 
 export const uploadFile = async (req, res) => {
   try {
@@ -8,7 +8,8 @@ export const uploadFile = async (req, res) => {
 
     const file = req.file;
     const fileName = `${Date.now()}-${file.originalname}`;
-    const fileUpload = bucket().file(fileName);
+    const storageBucket = bucket;
+    const fileUpload = storageBucket.file(fileName);
 
     const stream = fileUpload.createWriteStream({
       metadata: {
@@ -25,7 +26,7 @@ export const uploadFile = async (req, res) => {
       // Make file public
       await fileUpload.makePublic();
 
-      const publicUrl = `https://storage.googleapis.com/${bucket().name}/${fileName}`;
+      const publicUrl = `https://storage.googleapis.com/${storageBucket.name}/${fileName}`;
 
       res.json({
         success: true,
@@ -51,7 +52,8 @@ export const deleteFile = async (req, res) => {
       return res.status(400).json({ success: false, error: 'Filename is required' });
     }
 
-    await bucket().file(filename).delete();
+    const storageBucket = bucket;
+    await storageBucket.file(filename).delete();
 
     res.json({
       success: true,

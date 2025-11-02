@@ -90,7 +90,7 @@ const Contact = () => {
               isDark ? 'text-white' : 'text-gray-900'
             }`}
           >
-            Get In <span className="gradient-text">Touch</span>
+            Get In <span className="gradient-text bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-500">Touch</span>
           </h1>
           <p
             className={`text-lg ${

@@ -115,6 +115,72 @@ export const versionAPI = {
   }),
 };
 
+// Services API
+export const servicesAPI = {
+  getAll: () => apiCall('/services', { skipAuth: true }),
+  create: (data) => apiCall('/services', {
+    method: 'POST',
+    body: JSON.stringify(data),
+  }),
+  update: (id, data) => apiCall(`/services/${id}`, {
+    method: 'PUT',
+    body: JSON.stringify(data),
+  }),
+  delete: (id) => apiCall(`/services/${id}`, { method: 'DELETE' }),
+};
+
+// Resume API
+export const resumeAPI = {
+  // Experience
+  getAllExperiences: () => apiCall('/resume/experiences', { skipAuth: true }),
+  getExperience: (id) => apiCall(`/resume/experiences/${id}`, { skipAuth: true }),
+  createExperience: (data) => apiCall('/resume/experiences', {
+    method: 'POST',
+    body: JSON.stringify(data),
+  }),
+  updateExperience: (id, data) => apiCall(`/resume/experiences/${id}`, {
+    method: 'PUT',
+    body: JSON.stringify(data),
+  }),
+  deleteExperience: (id) => apiCall(`/resume/experiences/${id}`, { method: 'DELETE' }),
+
+  // Education
+  getAllEducation: () => apiCall('/resume/education', { skipAuth: true }),
+  createEducation: (data) => apiCall('/resume/education', {
+    method: 'POST',
+    body: JSON.stringify(data),
+  }),
+  updateEducation: (id, data) => apiCall(`/resume/education/${id}`, {
+    method: 'PUT',
+    body: JSON.stringify(data),
+  }),
+  deleteEducation: (id) => apiCall(`/resume/education/${id}`, { method: 'DELETE' }),
+
+  // Skills
+  getAllSkills: () => apiCall('/resume/skills', { skipAuth: true }),
+  createSkill: (data) => apiCall('/resume/skills', {
+    method: 'POST',
+    body: JSON.stringify(data),
+  }),
+  updateSkill: (id, data) => apiCall(`/resume/skills/${id}`, {
+    method: 'PUT',
+    body: JSON.stringify(data),
+  }),
+  deleteSkill: (id) => apiCall(`/resume/skills/${id}`, { method: 'DELETE' }),
+
+  // Certifications
+  getAllCertifications: () => apiCall('/resume/certifications', { skipAuth: true }),
+  createCertification: (data) => apiCall('/resume/certifications', {
+    method: 'POST',
+    body: JSON.stringify(data),
+  }),
+  updateCertification: (id, data) => apiCall(`/resume/certifications/${id}`, {
+    method: 'PUT',
+    body: JSON.stringify(data),
+  }),
+  deleteCertification: (id) => apiCall(`/resume/certifications/${id}`, { method: 'DELETE' }),
+};
+
 // Contact API (placeholder for future email implementation)
 export const contactAPI = {
   sendMessage: async (data) => {
@@ -136,4 +202,6 @@ export default {
   upload: uploadAPI,
   version: versionAPI,
   contact: contactAPI,
+  services: servicesAPI,
+  resume: resumeAPI,
 };

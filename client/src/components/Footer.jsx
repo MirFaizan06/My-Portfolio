@@ -68,7 +68,7 @@ const Footer = () => {
               viewport={{ once: true }}
               className={`text-2xl font-bold mb-4 gradient-text`}
             >
-              NxY
+              NxT
             </motion.h3>
             <motion.p
               initial={{ opacity: 0, y: 20 }}
@@ -195,7 +195,7 @@ const Footer = () => {
                 isDark ? 'text-gray-500' : 'text-gray-600'
               }`}
             >
-              © {currentYear} Mir Faizan (NxY). Made with{' '}
+              © {currentYear} Mir Faizan. Made with{' '}
               <Heart
                 className="inline text-red-500"
                 size={14}

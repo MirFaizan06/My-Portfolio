@@ -1,8 +1,6 @@
-import { OAuth2Client } from 'google-auth-library';
-import jwt from 'jsonwebtoken';
+import { auth } from '../config/firebase.js';
 
-const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
-const ALLOWED_EMAIL = 'mirfaizan8803@gmail.com';
+const ALLOWED_EMAIL = process.env.ADMIN_EMAIL || 'mirfaizan8803@gmail.com';
 
 export const googleAuth = async (req, res) => {
   try {
@@ -12,48 +10,50 @@ export const googleAuth = async (req, res) => {
       return res.status(400).json({ success: false, error: 'Token is required' });
     }
 
-    // Verify Google token
-    const ticket = await client.verifyIdToken({
-      idToken: token,
-      audience: process.env.GOOGLE_CLIENT_ID,
-    });
+    // Verify Firebase ID token instead of Google OAuth token
+    let decodedToken;
+    try {
+      decodedToken = await auth.verifyIdToken(token);
+    } catch (verifyError) {
+      console.error('Token verification error:', verifyError.message);
+      return res.status(401).json({
+        success: false,
+        error: 'Invalid or expired token. Please try signing in again.'
+      });
+    }
 
-    const payload = ticket.getPayload();
-    const email = payload.email;
+    const email = decodedToken.email;
 
     // Check if email is allowed
     if (email !== ALLOWED_EMAIL) {
+      console.warn(`Unauthorized access attempt from: ${email}`);
       return res.status(403).json({
         success: false,
         error: 'Access denied. Only authorized users can access the admin panel.',
       });
     }
 
-    // Create JWT token
-    const jwtToken = jwt.sign(
-      {
-        email: payload.email,
-        name: payload.name,
-        picture: payload.picture,
-      },
-      process.env.JWT_SECRET || 'your-secret-key',
-      { expiresIn: '7d' }
-    );
+    console.log(`✅ Successful login: ${email}`);
 
+    // Return the Firebase token directly - client will use it for authenticated requests
     res.json({
       success: true,
       data: {
-        token: jwtToken,
+        token: token, // Use the original Firebase token
         user: {
-          email: payload.email,
-          name: payload.name,
-          picture: payload.picture,
+          email: decodedToken.email,
+          name: decodedToken.name || decodedToken.email.split('@')[0],
+          picture: decodedToken.picture,
+          uid: decodedToken.uid,
         },
       },
     });
   } catch (error) {
     console.error('Auth error:', error);
-    res.status(401).json({ success: false, error: 'Invalid token' });
+    res.status(401).json({
+      success: false,
+      error: 'Authentication failed. Please try again.'
+    });
   }
 };
 

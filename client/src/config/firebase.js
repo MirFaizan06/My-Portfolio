@@ -11,8 +11,25 @@ const firebaseConfig = {
   appId: import.meta.env.VITE_FIREBASE_APP_ID,
 };
 
+// Validate Firebase configuration
+const validateConfig = () => {
+  const requiredFields = ['apiKey', 'authDomain', 'projectId'];
+  const missingFields = requiredFields.filter(field => !firebaseConfig[field]);
+
+  if (missingFields.length > 0) {
+    console.error('❌ Missing Firebase configuration fields:', missingFields);
+    console.error('Please check your .env file and ensure all VITE_FIREBASE_* variables are set');
+    throw new Error(`Missing Firebase config: ${missingFields.join(', ')}`);
+  }
+};
+
+validateConfig();
+
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
+
+console.log('✅ Firebase initialized successfully');
+console.log('📍 Project:', firebaseConfig.projectId);
 
 // Initialize Firebase services
 export const storage = getStorage(app);

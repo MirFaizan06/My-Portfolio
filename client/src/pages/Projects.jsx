@@ -19,90 +19,11 @@ const Projects = () => {
         setLoading(true);
         const response = await projectsAPI.getAll();
         const apiProjects = response.data || [];
-
-        // If no projects from API, use sample data
-        if (apiProjects.length === 0) {
-          setProjects([
-        {
-          id: 1,
-          title: 'E-Commerce Platform',
-          description: 'Full-featured online store with payment integration, inventory management, and admin dashboard',
-          image: 'https://images.unsplash.com/photo-1557821552-17105176677c?w=400&h=300&fit=crop',
-          category: 'client',
-          tech: ['React', 'Node.js', 'MongoDB', 'Stripe'],
-          github: '#',
-          live: '#',
-        },
-        {
-          id: 2,
-          title: 'Task Management App',
-          description: 'Collaborative task manager with real-time updates, team collaboration, and progress tracking',
-          image: 'https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?w=400&h=300&fit=crop',
-          category: 'personal',
-          tech: ['Next.js', 'Firebase', 'TailwindCSS'],
-          github: '#',
-          live: '#',
-        },
-        {
-          id: 3,
-          title: 'AI Chatbot Platform',
-          description: 'Intelligent chatbot with natural language processing and machine learning capabilities',
-          image: 'https://images.unsplash.com/photo-1531746790731-6c087fecd65a?w=400&h=300&fit=crop',
-          category: 'client',
-          tech: ['Python', 'TensorFlow', 'React', 'FastAPI'],
-          github: '#',
-          live: '#',
-        },
-        {
-          id: 4,
-          title: 'Portfolio CMS',
-          description: 'Dynamic portfolio management system with admin panel and real-time content updates',
-          image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400&h=300&fit=crop',
-          category: 'personal',
-          tech: ['React', 'Express', 'PostgreSQL'],
-          github: '#',
-          live: '#',
-        },
-        {
-          id: 5,
-          title: 'Social Media Dashboard',
-          description: 'Analytics dashboard for social media management with scheduling and insights',
-          image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=400&h=300&fit=crop',
-          category: 'client',
-          tech: ['Vue.js', 'Laravel', 'MySQL', 'Chart.js'],
-          github: '#',
-          live: '#',
-        },
-        {
-          id: 6,
-          title: 'Weather Forecast App',
-          description: 'Beautiful weather app with detailed forecasts, maps, and location-based alerts',
-          image: 'https://images.unsplash.com/photo-1504608524841-42fe6f032b4b?w=400&h=300&fit=crop',
-          category: 'personal',
-          tech: ['React Native', 'OpenWeather API', 'Redux'],
-          github: '#',
-          live: '#',
-        },
-      ]);
-        } else {
-          setProjects(apiProjects);
-        }
+        setProjects(apiProjects);
       } catch (err) {
         console.error('Error fetching projects:', err);
         setError(err.message);
-        // Use sample data as fallback
-        setProjects([
-          {
-            id: 1,
-            title: 'E-Commerce Platform',
-            description: 'Full-featured online store with payment integration, inventory management, and admin dashboard',
-            image: 'https://images.unsplash.com/photo-1557821552-17105176677c?w=400&h=300&fit=crop',
-            category: 'client',
-            tech: ['React', 'Node.js', 'MongoDB', 'Stripe'],
-            github: '#',
-            live: '#',
-          },
-        ]);
+        setProjects([]);
       } finally {
         setLoading(false);
       }
@@ -142,7 +63,7 @@ const Projects = () => {
               isDark ? 'text-white' : 'text-gray-900'
             }`}
           >
-            My <span className="gradient-text">Projects</span>
+            My <span className="gradient-text bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-500">Projects</span>
           </h1>
           <p
             className={`text-lg ${
@@ -219,6 +140,22 @@ const Projects = () => {
               />
             ))}
           </div>
+        ) : filteredProjects.length === 0 ? (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className={`text-center py-20 px-6 rounded-2xl ${
+              isDark ? 'bg-gray-800/50 border border-gray-700' : 'bg-white border border-gray-200'
+            }`}
+          >
+            <Search size={64} className={`mx-auto mb-6 ${isDark ? 'text-cyan-400' : 'text-blue-600'}`} />
+            <h3 className={`text-2xl font-bold mb-4 ${isDark ? 'text-white' : 'text-gray-900'}`}>
+              No Projects Found
+            </h3>
+            <p className={`text-lg ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+              {searchTerm ? 'Try adjusting your search or filter' : 'No projects available at the moment'}
+            </p>
+          </motion.div>
         ) : (
           <AnimatePresence mode="popLayout">
             <motion.div

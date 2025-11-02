@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useTheme } from '../context/ThemeContext';
 import {
@@ -11,10 +11,48 @@ import {
   Layers,
   Terminal,
 } from 'lucide-react';
+import { resumeAPI } from '../utils/api';
+import ConfirmDialog from '../components/ConfirmDialog';
 
 const Resume = () => {
   const { isDark } = useTheme();
   const [downloading, setDownloading] = useState(false);
+  const [experience, setExperience] = useState([]);
+  const [education, setEducation] = useState([]);
+  const [skills, setSkills] = useState([]);
+  const [certifications, setCertifications] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [dialog, setDialog] = useState({ isOpen: false, type: 'info', title: '', message: '', onConfirm: null });
+
+  // Fetch all resume data from API
+  useEffect(() => {
+    const fetchResumeData = async () => {
+      try {
+        setLoading(true);
+        const [expRes, eduRes, skillsRes, certsRes] = await Promise.all([
+          resumeAPI.getAllExperiences(),
+          resumeAPI.getAllEducation(),
+          resumeAPI.getAllSkills(),
+          resumeAPI.getAllCertifications(),
+        ]);
+
+        setExperience(expRes.data || []);
+        setEducation(eduRes.data || []);
+        setSkills(skillsRes.data || []);
+        setCertifications(certsRes.data || []);
+      } catch (error) {
+        console.error('Error fetching resume data:', error);
+        setExperience([]);
+        setEducation([]);
+        setSkills([]);
+        setCertifications([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchResumeData();
+  }, []);
 
   const handleDownload = async () => {
     setDownloading(true);
@@ -22,72 +60,28 @@ const Resume = () => {
       // TODO: Replace with actual Firebase Storage URL
       await new Promise((resolve) => setTimeout(resolve, 2000));
       // window.open(downloadUrl, '_blank');
-      alert('CV download will be available soon!');
+      setDialog({
+        isOpen: true,
+        type: 'info',
+        title: 'Coming Soon',
+        message: 'CV download will be available soon!',
+        onConfirm: null,
+        showCancel: false
+      });
     } catch (error) {
-      alert('Failed to download CV');
+      setDialog({
+        isOpen: true,
+        type: 'error',
+        title: 'Download Failed',
+        message: 'Failed to download CV. Please try again.',
+        onConfirm: null,
+        showCancel: false
+      });
     } finally {
       setDownloading(false);
     }
   };
 
-  const experience = [
-    {
-      title: 'Senior Full Stack Developer',
-      company: 'Tech Solutions Inc.',
-      period: '2022 - Present',
-      description: 'Leading development of scalable web applications using React, Node.js, and AWS.',
-      achievements: [
-        'Architected and deployed 10+ production applications',
-        'Reduced page load time by 60% through optimization',
-        'Mentored junior developers and conducted code reviews',
-      ],
-    },
-    {
-      title: 'Full Stack Developer',
-      company: 'Digital Innovations',
-      period: '2020 - 2022',
-      description: 'Developed custom web solutions for clients across various industries.',
-      achievements: [
-        'Built 20+ client projects from scratch',
-        'Implemented CI/CD pipelines',
-        'Increased client satisfaction rate to 98%',
-      ],
-    },
-    {
-      title: 'Junior Developer',
-      company: 'StartUp Labs',
-      period: '2019 - 2020',
-      description: 'Contributed to front-end and back-end development of web applications.',
-      achievements: [
-        'Developed reusable component libraries',
-        'Fixed critical bugs and improved performance',
-        'Collaborated with design team on UI/UX',
-      ],
-    },
-  ];
-
-  const education = [
-    {
-      degree: 'Bachelor of Computer Science',
-      school: 'University of Technology',
-      period: '2015 - 2019',
-      achievements: ['GPA: 3.8/4.0', 'Dean\'s List', 'Best Final Year Project Award'],
-    },
-  ];
-
-  const skills = {
-    'Frontend': ['React', 'Next.js', 'Vue.js', 'TypeScript', 'TailwindCSS', 'Framer Motion'],
-    'Backend': ['Node.js', 'Express', 'Python', 'Django', 'RESTful APIs', 'GraphQL'],
-    'Database': ['MongoDB', 'PostgreSQL', 'MySQL', 'Firebase', 'Redis'],
-    'Tools & Others': ['Git', 'Docker', 'AWS', 'CI/CD', 'Agile', 'Testing (Jest, Cypress)'],
-  };
-
-  const certifications = [
-    'AWS Certified Developer - Associate',
-    'Google Cloud Professional',
-    'MongoDB Certified Developer',
-    'Advanced React & Redux',
-  ];
 
   return (
     <div
@@ -107,7 +101,7 @@ const Resume = () => {
               isDark ? 'text-white' : 'text-gray-900'
             }`}
           >
-            My <span className="gradient-text">Resume</span>
+            My <span className="gradient-text bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-500">Resume</span>
           </h1>
           <p
             className={`text-lg mb-8 ${
@@ -175,15 +169,38 @@ const Resume = () => {
           </div>
 
           <div className="space-y-6">
-            {experience.map((job, index) => (
+            {loading ? (
+              <div className="text-center py-12">
+                <div className={`text-lg ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+                  Loading experience...
+                </div>
+              </div>
+            ) : experience.length === 0 ? (
               <motion.div
-                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className={`text-center py-12 px-6 rounded-2xl ${
+                  isDark ? 'bg-gray-800/50 border border-gray-700' : 'bg-white border border-gray-200'
+                }`}
+              >
+                <Briefcase size={64} className={`mx-auto mb-6 ${isDark ? 'text-cyan-400' : 'text-blue-600'}`} />
+                <h3 className={`text-2xl font-bold mb-4 ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                  No Work Experience Added Yet
+                </h3>
+                <p className={`text-lg ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+                  Experience details will appear here once added
+                </p>
+              </motion.div>
+            ) : (
+              experience.map((job, index) => (
+              <motion.div
+                key={job.id || index}
                 initial={{ opacity: 0, x: -20 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1 }}
-                className={`p-6 rounded-xl ${
-                  isDark ? 'glass-dark' : 'glass-light'
+                className={`p-6 rounded-xl border ${
+                  isDark ? 'bg-gray-800/50 border-gray-700' : 'bg-white border-gray-200'
                 }`}
               >
                 <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between mb-4">
@@ -240,7 +257,8 @@ const Resume = () => {
                   ))}
                 </ul>
               </motion.div>
-            ))}
+              ))
+            )}
           </div>
         </motion.section>
 
@@ -272,14 +290,37 @@ const Resume = () => {
           </div>
 
           <div className="space-y-6">
-            {education.map((edu, index) => (
+            {loading ? (
+              <div className="text-center py-12">
+                <div className={`text-lg ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+                  Loading education...
+                </div>
+              </div>
+            ) : education.length === 0 ? (
               <motion.div
-                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className={`text-center py-12 px-6 rounded-2xl ${
+                  isDark ? 'bg-gray-800/50 border border-gray-700' : 'bg-white border border-gray-200'
+                }`}
+              >
+                <GraduationCap size={64} className={`mx-auto mb-6 ${isDark ? 'text-purple-400' : 'text-indigo-600'}`} />
+                <h3 className={`text-2xl font-bold mb-4 ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                  No Education Added Yet
+                </h3>
+                <p className={`text-lg ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+                  Education details will appear here once added
+                </p>
+              </motion.div>
+            ) : (
+              education.map((edu, index) => (
+              <motion.div
+                key={edu.id || index}
                 initial={{ opacity: 0, x: -20 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
-                className={`p-6 rounded-xl ${
-                  isDark ? 'glass-dark' : 'glass-light'
+                className={`p-6 rounded-xl border ${
+                  isDark ? 'bg-gray-800/50 border-gray-700' : 'bg-white border-gray-200'
                 }`}
               >
                 <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between mb-4">
@@ -324,7 +365,8 @@ const Resume = () => {
                   ))}
                 </ul>
               </motion.div>
-            ))}
+              ))
+            )}
           </div>
         </motion.section>
 
@@ -356,15 +398,40 @@ const Resume = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {Object.entries(skills).map(([category, skillList], index) => (
+            {loading ? (
+              <div className="col-span-full text-center py-12">
+                <div className={`text-lg ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+                  Loading skills...
+                </div>
+              </div>
+            ) : skills.length === 0 ? (
+              <div className="col-span-full">
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className={`text-center py-12 px-6 rounded-2xl ${
+                    isDark ? 'bg-gray-800/50 border border-gray-700' : 'bg-white border border-gray-200'
+                  }`}
+                >
+                  <Code size={64} className={`mx-auto mb-6 ${isDark ? 'text-green-400' : 'text-green-600'}`} />
+                  <h3 className={`text-2xl font-bold mb-4 ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                    No Skills Added Yet
+                  </h3>
+                  <p className={`text-lg ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+                    Skills will appear here once added
+                  </p>
+                </motion.div>
+              </div>
+            ) : (
+              skills.map((skillCategory, index) => (
               <motion.div
-                key={category}
+                key={skillCategory.id || index}
                 initial={{ opacity: 0, scale: 0.9 }}
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1 }}
-                className={`p-6 rounded-xl ${
-                  isDark ? 'glass-dark' : 'glass-light'
+                className={`p-6 rounded-xl border ${
+                  isDark ? 'bg-gray-800/50 border-gray-700' : 'bg-white border-gray-200'
                 }`}
               >
                 <h3
@@ -372,10 +439,10 @@ const Resume = () => {
                     isDark ? 'text-white' : 'text-gray-900'
                   }`}
                 >
-                  {category}
+                  {skillCategory.category}
                 </h3>
                 <div className="flex flex-wrap gap-2">
-                  {skillList.map((skill) => (
+                  {skillCategory.items.map((skill, idx) => (
                     <span
                       key={skill}
                       className={`px-3 py-1 text-sm rounded-lg ${
@@ -389,7 +456,8 @@ const Resume = () => {
                   ))}
                 </div>
               </motion.div>
-            ))}
+              ))
+            )}
           </div>
         </motion.section>
 
@@ -419,37 +487,90 @@ const Resume = () => {
             </h2>
           </div>
 
-          <motion.div
-            className={`p-6 rounded-xl ${
-              isDark ? 'glass-dark' : 'glass-light'
-            }`}
-          >
-            <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              {certifications.map((cert, index) => (
-                <motion.li
-                  key={index}
-                  initial={{ opacity: 0, x: -20 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.1 }}
-                  className={`flex items-start gap-2 ${
-                    isDark ? 'text-gray-300' : 'text-gray-700'
-                  }`}
-                >
-                  <span
-                    className={`mt-1 ${
-                      isDark ? 'text-orange-400' : 'text-orange-600'
+          {loading ? (
+            <div className="text-center py-12">
+              <div className={`text-lg ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+                Loading certifications...
+              </div>
+            </div>
+          ) : certifications.length === 0 ? (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className={`text-center py-12 px-6 rounded-2xl ${
+                isDark ? 'bg-gray-800/50 border border-gray-700' : 'bg-white border border-gray-200'
+              }`}
+            >
+              <Award size={64} className={`mx-auto mb-6 ${isDark ? 'text-orange-400' : 'text-orange-600'}`} />
+              <h3 className={`text-2xl font-bold mb-4 ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                No Certifications Added Yet
+              </h3>
+              <p className={`text-lg ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+                Certifications will appear here once added
+              </p>
+            </motion.div>
+          ) : (
+            <motion.div
+              className={`p-6 rounded-xl border ${
+                isDark ? 'bg-gray-800/50 border-gray-700' : 'bg-white border-gray-200'
+              }`}
+            >
+              <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {certifications.map((cert, index) => (
+                  <motion.li
+                    key={cert.id || index}
+                    initial={{ opacity: 0, x: -20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: index * 0.1 }}
+                    className={`flex items-start gap-2 ${
+                      isDark ? 'text-gray-300' : 'text-gray-700'
                     }`}
                   >
-                    ✓
-                  </span>
-                  {cert}
-                </motion.li>
+                    <span
+                      className={`mt-1 ${
+                        isDark ? 'text-orange-400' : 'text-orange-600'
+                      }`}
+                    >
+                      ✓
+                    </span>
+                    <div className="flex-1">
+                      <div>{cert.name}</div>
+                      {cert.issuer && (
+                        <div className={`text-sm ${isDark ? 'text-gray-500' : 'text-gray-500'}`}>
+                          {cert.issuer} {cert.date && `• ${cert.date}`}
+                        </div>
+                      )}
+                      {cert.pdfUrl && (
+                        <a
+                          href={cert.pdfUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className={`text-sm underline ${isDark ? 'text-cyan-400 hover:text-cyan-300' : 'text-blue-600 hover:text-blue-700'}`}
+                        >
+                          View Certificate PDF
+                        </a>
+                      )}
+                    </div>
+                  </motion.li>
               ))}
             </ul>
           </motion.div>
+          )}
         </motion.section>
       </div>
+
+      {/* Confirm Dialog */}
+      <ConfirmDialog
+        isOpen={dialog.isOpen}
+        onClose={() => setDialog({ ...dialog, isOpen: false })}
+        onConfirm={dialog.onConfirm}
+        title={dialog.title}
+        message={dialog.message}
+        type={dialog.type}
+        confirmText="OK"
+        showCancel={dialog.showCancel !== false}
+      />
     </div>
   );
 };
