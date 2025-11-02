@@ -18,7 +18,8 @@
       "Bash(taskkill:*)",
       "Bash(timeout /t 3)",
       "Bash(dir:*)",
-      "mcp__ide__getDiagnostics"
+      "mcp__ide__getDiagnostics",
+      "Bash(git stash:*)"
     ],
     "deny": [],
     "ask": []
