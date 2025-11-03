@@ -1,24 +1,26 @@
-import { readFileSync, writeFileSync } from 'fs';
-import { fileURLToPath } from 'url';
-import { dirname, join } from 'path';
+import { db } from '../config/firebase.js';
+import admin from '../config/firebase.js';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-const versionFilePath = join(__dirname, '../../version.json');
-
-// Initialize version file if it doesn't exist
-try {
-  readFileSync(versionFilePath);
-} catch (error) {
-  writeFileSync(versionFilePath, JSON.stringify({ version: '1.0.0', lastUpdated: new Date().toISOString() }, null, 2));
-}
+const VERSION_DOC_ID = 'current';
 
 export const getVersion = async (req, res) => {
   try {
-    const versionData = JSON.parse(readFileSync(versionFilePath, 'utf8'));
-    res.json({ success: true, data: versionData });
+    const doc = await db.collection('version').doc(VERSION_DOC_ID).get();
+
+    if (!doc.exists) {
+      // Initialize with default version if doesn't exist
+      const defaultVersion = {
+        version: '1.0.0',
+        lastUpdated: admin.firestore.FieldValue.serverTimestamp(),
+      };
+      await db.collection('version').doc(VERSION_DOC_ID).set(defaultVersion);
+      return res.json({ success: true, data: { version: '1.0.0', lastUpdated: new Date().toISOString() } });
+    }
+
+    res.json({ success: true, data: doc.data() });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    console.error('Error fetching version:', error);
+    res.status(500).json({ success: false, error: 'Failed to fetch version' });
   }
 };
 
@@ -32,13 +34,14 @@ export const updateVersion = async (req, res) => {
 
     const versionData = {
       version,
-      lastUpdated: new Date().toISOString(),
+      lastUpdated: admin.firestore.FieldValue.serverTimestamp(),
     };
 
-    writeFileSync(versionFilePath, JSON.stringify(versionData, null, 2));
+    await db.collection('version').doc(VERSION_DOC_ID).set(versionData);
 
-    res.json({ success: true, data: versionData });
+    res.json({ success: true, data: { version, lastUpdated: new Date().toISOString() } });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    console.error('Error updating version:', error);
+    res.status(500).json({ success: false, error: 'Failed to update version' });
   }
 };
