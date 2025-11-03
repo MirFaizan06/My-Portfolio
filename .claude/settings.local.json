@@ -39,7 +39,17 @@
       "Bash(vercel --version:*)",
       "Bash(vercel)",
       "Bash(vercel login)",
-      "Bash(vercel --yes)"
+      "Bash(vercel --yes)",
+      "Bash(vercel --prod:*)",
+      "Bash(vercel env add:*)",
+      "Bash(vercel env pull:*)",
+      "Bash(vercel env rm:*)",
+      "Bash(ping:*)",
+      "Bash(vercel --yes --prod:*)",
+      "Bash(cat:*)",
+      "Bash(vercel ls:*)",
+      "Bash(vercel env:*)",
+      "Bash(vercel logs:*)"
     ],
     "deny": [],
     "ask": []

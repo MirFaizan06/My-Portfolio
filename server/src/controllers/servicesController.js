@@ -1,4 +1,5 @@
 import { db } from '../config/firebase.js';
+import admin from '../config/firebase.js';
 
 const servicesCollection = db.collection('services');
 

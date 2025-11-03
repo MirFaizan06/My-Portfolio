@@ -195,6 +195,15 @@ export const contactAPI = {
   },
 };
 
+// Contact Details API
+export const contactDetailsAPI = {
+  get: () => apiCall('/contact-details', { skipAuth: true }),
+  update: (data) => apiCall('/contact-details', {
+    method: 'PUT',
+    body: JSON.stringify(data),
+  }),
+};
+
 export default {
   projects: projectsAPI,
   pricing: pricingAPI,
@@ -202,6 +211,7 @@ export default {
   upload: uploadAPI,
   version: versionAPI,
   contact: contactAPI,
+  contactDetails: contactDetailsAPI,
   services: servicesAPI,
   resume: resumeAPI,
 };

@@ -9,6 +9,7 @@ import uploadRoutes from './routes/uploadRoutes.js';
 import versionRoutes from './routes/versionRoutes.js';
 import servicesRoutes from './routes/servicesRoutes.js';
 import resumeRoutes from './routes/resumeRoutes.js';
+import contactDetailsRoutes from './routes/contactDetailsRoutes.js';
 
 dotenv.config();
 
@@ -54,6 +55,7 @@ app.use('/api/upload', uploadRoutes);
 app.use('/api/version', versionRoutes);
 app.use('/api/services', servicesRoutes);
 app.use('/api/resume', resumeRoutes);
+app.use('/api/contact-details', contactDetailsRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {
