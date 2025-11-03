@@ -34,7 +34,7 @@ const Contact = () => {
         phone: '+91 XXX XXXXXXX',
         location: 'India',
         socialLinks: {
-          github: 'https://github.com/mirfaizan8803',
+          github: 'https://github.com/MirFaizan06',
           linkedin: '#',
           twitter: '#',
         },

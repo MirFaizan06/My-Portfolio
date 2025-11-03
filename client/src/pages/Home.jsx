@@ -43,8 +43,9 @@ const Home = () => {
     {
       icon: Globe,
       name: 'Web3 & Blockchain',
-      description: 'Developing decentralized applications and smart contracts on Ethereum',
+      description: 'Upcoming feature - Expanding into decentralized applications and blockchain',
       color: 'from-orange-400 via-amber-500 to-yellow-500',
+      badge: 'Coming Soon',
     },
     {
       icon: Zap,
@@ -68,10 +69,8 @@ const Home = () => {
   ];
 
   const socialLinks = [
-    { icon: Github, href: 'https://github.com/mirfaizan8803', label: 'GitHub' },
-    { icon: Linkedin, href: '#', label: 'LinkedIn' },
+    { icon: Github, href: 'https://github.com/MirFaizan06', label: 'GitHub' },
     { icon: Mail, href: 'mailto:mirfaizan8803@gmail.com', label: 'Email' },
-    { icon: Coffee, href: '#', label: 'Buy Me a Coffee' },
   ];
 
   return (
@@ -385,6 +384,11 @@ const Home = () => {
                       isDark ? 'text-dark-text' : 'text-light-text'
                     }`}>
                       {skill.name}
+                      {skill.badge && (
+                        <span className={`ml-3 text-xs px-3 py-1 rounded-full bg-gradient-to-r ${skill.color} text-white font-semibold`}>
+                          {skill.badge}
+                        </span>
+                      )}
                     </h3>
                     <p className={`text-base leading-relaxed ${
                       isDark ? 'text-dark-text-secondary' : 'text-light-text-secondary'

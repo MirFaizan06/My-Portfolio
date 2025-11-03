@@ -26,10 +26,8 @@ const Footer = () => {
   const currentYear = new Date().getFullYear();
 
   const socialLinks = [
-    { icon: Github, href: 'https://github.com/mirfaizan8803', label: 'GitHub' },
-    { icon: Linkedin, href: '#', label: 'LinkedIn' },
+    { icon: Github, href: 'https://github.com/MirFaizan06', label: 'GitHub' },
     { icon: Mail, href: 'mailto:mirfaizan8803@gmail.com', label: 'Email' },
-    { icon: Coffee, href: '#', label: 'Buy Me a Coffee' },
   ];
 
   const footerLinks = [

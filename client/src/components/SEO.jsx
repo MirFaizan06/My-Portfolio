@@ -7,9 +7,9 @@ import { useLocation } from 'react-router-dom';
  */
 const SEO = ({
   title = 'Mir Faizan - Full Stack Developer | Web & Mobile App Development',
-  description = 'Professional full-stack developer specializing in React, Node.js, and modern web technologies. Building scalable web and mobile applications with 5+ years of experience.',
-  keywords = 'full stack developer, web developer, react developer, node.js developer, mobile app development, web3 developer, blockchain developer, freelance developer',
-  author = 'Mir Faizan (NxY)',
+  description = 'Professional full-stack developer specializing in React, Node.js, and modern web technologies. Building scalable web and mobile applications with 2+ years of experience.',
+  keywords = 'full stack developer, web developer, react developer, node.js developer, mobile app development, freelance developer, software engineer',
+  author = 'Mir Faizan (NxT)',
   image = 'https://client-the-nxt-lvls-projects.vercel.app/og-image.jpg',
   type = 'website',
   url = '',
@@ -116,14 +116,14 @@ const SEO = ({
 // Predefined SEO configurations for each page
 export const seoConfig = {
   home: {
-    title: 'Mir Faizan - Full Stack Developer | React, Node.js & Web3 Expert',
-    description: 'Professional full-stack developer with 5+ years experience in React, Node.js, Web3, and mobile development. Building scalable web applications and blockchain solutions for clients worldwide.',
-    keywords: 'mir faizan, full stack developer, react developer, node.js developer, web3 developer, blockchain developer, mobile app developer, freelance developer, software engineer, india developer',
+    title: 'Mir Faizan - Full Stack Developer | React, Node.js Expert',
+    description: 'Professional full-stack developer with 2+ years experience in React, Node.js, and mobile development. Building scalable web applications for clients worldwide.',
+    keywords: 'mir faizan, full stack developer, react developer, node.js developer, mobile app developer, freelance developer, software engineer, india developer',
     structuredData: {
       '@context': 'https://schema.org',
       '@type': 'Person',
       name: 'Mir Faizan',
-      alternateName: 'NxY',
+      alternateName: 'NxT',
       url: 'https://client-the-nxt-lvls-projects.vercel.app',
       image: 'https://client-the-nxt-lvls-projects.vercel.app/profile.jpg',
       jobTitle: 'Full Stack Developer',
@@ -132,16 +132,13 @@ export const seoConfig = {
         name: 'Freelance',
       },
       sameAs: [
-        'https://github.com/mirfaizan8803',
-        'https://linkedin.com/in/mirfaizan',
+        'https://github.com/MirFaizan06',
       ],
       knowsAbout: [
         'Web Development',
         'Mobile App Development',
-        'Blockchain Development',
         'React',
         'Node.js',
-        'Web3',
         'Full Stack Development',
       ],
       address: {
@@ -154,8 +151,8 @@ export const seoConfig = {
 
   projects: {
     title: 'Projects - Mir Faizan | Full Stack Development Portfolio',
-    description: 'Explore my portfolio of 50+ completed projects including web applications, mobile apps, blockchain solutions, and e-commerce platforms built with React, Node.js, and modern technologies.',
-    keywords: 'portfolio projects, web development projects, react projects, node.js projects, mobile app projects, blockchain projects, full stack projects, developer portfolio',
+    description: 'Explore my portfolio of 50+ completed projects including web applications, mobile apps, and e-commerce platforms built with React, Node.js, and modern technologies.',
+    keywords: 'portfolio projects, web development projects, react projects, node.js projects, mobile app projects, full stack projects, developer portfolio',
     type: 'website',
     structuredData: {
       '@context': 'https://schema.org',
@@ -171,7 +168,7 @@ export const seoConfig = {
 
   pricing: {
     title: 'Pricing - Affordable Web Development Services | Mir Faizan',
-    description: 'Transparent pricing for web development, mobile app development, and blockchain services. Starting from $99. Multi-currency support with competitive rates for quality development work.',
+    description: 'Transparent pricing for web development and mobile app development services. Starting from $99. Multi-currency support with competitive rates for quality development work.',
     keywords: 'web development pricing, mobile app cost, freelance developer rates, web development cost, app development pricing, affordable web developer, competitive pricing',
     type: 'website',
     structuredData: {
@@ -202,7 +199,7 @@ export const seoConfig = {
 
   resume: {
     title: 'Resume - Mir Faizan | Full Stack Developer Experience & Skills',
-    description: 'Professional resume showcasing 5+ years of full-stack development experience, technical skills in React, Node.js, Web3, education, certifications, and achievements.',
+    description: 'Professional resume showcasing 2+ years of full-stack development experience, technical skills in React, Node.js, education, certifications, and achievements.',
     keywords: 'developer resume, full stack developer cv, react developer resume, node.js developer experience, professional resume, developer skills, software engineer resume',
     type: 'profile',
     structuredData: {
@@ -221,10 +218,8 @@ export const seoConfig = {
         'JavaScript',
         'React',
         'Node.js',
+        'MySQL',
         'MongoDB',
-        'PostgreSQL',
-        'Web3',
-        'Blockchain',
         'Mobile Development',
       ],
     },
@@ -232,7 +227,7 @@ export const seoConfig = {
 
   contact: {
     title: 'Contact - Hire Mir Faizan | Full Stack Developer',
-    description: 'Get in touch for web development, mobile app development, or blockchain projects. Available for freelance work and consultations. Fast response guaranteed.',
+    description: 'Get in touch for web development and mobile app development projects. Available for freelance work and consultations. Fast response guaranteed.',
     keywords: 'hire developer, contact web developer, freelance developer contact, hire full stack developer, web development inquiry, developer consultation',
     type: 'website',
     structuredData: {
