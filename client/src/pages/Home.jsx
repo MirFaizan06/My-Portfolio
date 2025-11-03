@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import { useTheme } from '../context/ThemeContext';
+import SEO, { seoConfig } from '../components/SEO';
 import {
   Code2,
   Rocket,
@@ -74,9 +75,11 @@ const Home = () => {
   ];
 
   return (
-    <div className={`min-h-screen ${isDark ? 'bg-dark-bg' : 'bg-light-bg'}`}>
+    <>
+      <SEO {...seoConfig.home} />
+      <div className={`min-h-screen ${isDark ? 'bg-dark-bg' : 'bg-light-bg'}`}>
 
-      {/* Hero Section */}
+        {/* Hero Section */}
       <section className="relative min-h-screen flex items-center px-6 lg:px-8 py-24 overflow-hidden">
         {/* Background Effects */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
@@ -473,6 +476,7 @@ const Home = () => {
       </section>
 
     </div>
+    </>
   );
 };
 

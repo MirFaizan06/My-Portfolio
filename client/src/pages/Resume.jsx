@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useTheme } from '../context/ThemeContext';
+import SEO, { seoConfig } from '../components/SEO';
 import {
   Download,
   Briefcase,
@@ -84,9 +85,11 @@ const Resume = () => {
 
 
   return (
-    <div
-      className={`min-h-screen pt-24 pb-16 px-4 sm:px-6 lg:px-8 ${
-        isDark ? 'bg-gray-900' : 'bg-gray-50'
+    <>
+      <SEO {...seoConfig.resume} />
+      <div
+        className={`min-h-screen pt-24 pb-16 px-4 sm:px-6 lg:px-8 ${
+          isDark ? 'bg-gray-900' : 'bg-gray-50'
       }`}
     >
       <div className="max-w-5xl mx-auto">
@@ -572,6 +575,7 @@ const Resume = () => {
         showCancel={dialog.showCancel !== false}
       />
     </div>
+    </>
   );
 };
 

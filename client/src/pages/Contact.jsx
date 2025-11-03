@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useTheme } from '../context/ThemeContext';
+import SEO, { seoConfig } from '../components/SEO';
 import { Send, Mail, Phone, MapPin, Github, Linkedin, Twitter, CheckCircle2, AlertCircle, Loader2 } from 'lucide-react';
 import { contactAPI, contactDetailsAPI } from '../utils/api';
 
@@ -101,9 +102,11 @@ const Contact = () => {
   ] : [];
 
   return (
-    <div
-      className={`min-h-screen pt-24 pb-16 px-4 sm:px-6 lg:px-8 ${
-        isDark ? 'bg-gray-900' : 'bg-gray-50'
+    <>
+      <SEO {...seoConfig.contact} />
+      <div
+        className={`min-h-screen pt-24 pb-16 px-4 sm:px-6 lg:px-8 ${
+          isDark ? 'bg-gray-900' : 'bg-gray-50'
       }`}
     >
       {/* Background Effects */}
@@ -466,6 +469,7 @@ const Contact = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 

@@ -1,0 +1,15 @@
+# robots.txt for Mir Faizan Portfolio Website
+
+# Allow all search engines to crawl the website
+User-agent: *
+Allow: /
+
+# Disallow admin panel from search engines
+Disallow: /admin/
+Disallow: /admin
+
+# Sitemap location
+Sitemap: https://client-the-nxt-lvls-projects.vercel.app/sitemap.xml
+
+# Crawl-delay for polite bots (in seconds)
+Crawl-delay: 1

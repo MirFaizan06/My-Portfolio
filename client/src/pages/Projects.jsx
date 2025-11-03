@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from '../context/ThemeContext';
+import SEO, { seoConfig } from '../components/SEO';
 import { ExternalLink, Github, Filter, Search } from 'lucide-react';
 import { projectsAPI } from '../utils/api';
 
@@ -46,9 +47,11 @@ const Projects = () => {
   });
 
   return (
-    <div
-      className={`min-h-screen pt-24 pb-16 px-4 sm:px-6 lg:px-8 ${
-        isDark ? 'bg-gray-900' : 'bg-gray-50'
+    <>
+      <SEO {...seoConfig.projects} />
+      <div
+        className={`min-h-screen pt-24 pb-16 px-4 sm:px-6 lg:px-8 ${
+          isDark ? 'bg-gray-900' : 'bg-gray-50'
       }`}
     >
       <div className="max-w-7xl mx-auto">
@@ -267,6 +270,7 @@ const Projects = () => {
         )}
       </div>
     </div>
+    </>
   );
 };
 
