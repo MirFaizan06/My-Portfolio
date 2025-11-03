@@ -1,68 +1,80 @@
-// In-memory storage for now (replace with Firestore later)
-let projects = [];
-let nextId = 1;
+import { db } from '../config/firebase.js';
+import admin from '../config/firebase.js';
+
+const projectsCollection = db.collection('projects');
 
 export const getAllProjects = async (req, res) => {
   try {
+    const snapshot = await projectsCollection.orderBy('createdAt', 'desc').get();
+    const projects = [];
+    snapshot.forEach((doc) => {
+      projects.push({ id: doc.id, ...doc.data() });
+    });
     res.json({ success: true, data: projects });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    console.error('Error fetching projects:', error);
+    res.status(500).json({ success: false, error: 'Failed to fetch projects' });
   }
 };
 
 export const getProjectById = async (req, res) => {
   try {
-    const project = projects.find(p => p.id === parseInt(req.params.id));
-    if (!project) {
+    const doc = await projectsCollection.doc(req.params.id).get();
+    if (!doc.exists) {
       return res.status(404).json({ success: false, error: 'Project not found' });
     }
-    res.json({ success: true, data: project });
+    res.json({ success: true, data: { id: doc.id, ...doc.data() } });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    console.error('Error fetching project:', error);
+    res.status(500).json({ success: false, error: 'Failed to fetch project' });
   }
 };
 
 export const createProject = async (req, res) => {
   try {
-    const project = {
-      id: nextId++,
+    const newProject = {
       ...req.body,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
+      createdAt: admin.firestore.FieldValue.serverTimestamp(),
+      updatedAt: admin.firestore.FieldValue.serverTimestamp(),
     };
-    projects.push(project);
-    res.status(201).json({ success: true, data: project });
+
+    const docRef = await projectsCollection.add(newProject);
+
+    res.status(201).json({
+      success: true,
+      data: { id: docRef.id, ...newProject },
+    });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    console.error('Error creating project:', error);
+    res.status(500).json({ success: false, error: 'Failed to create project' });
   }
 };
 
 export const updateProject = async (req, res) => {
   try {
-    const index = projects.findIndex(p => p.id === parseInt(req.params.id));
-    if (index === -1) {
-      return res.status(404).json({ success: false, error: 'Project not found' });
-    }
-    projects[index] = {
-      ...projects[index],
+    const updateData = {
       ...req.body,
-      updatedAt: new Date().toISOString(),
+      updatedAt: admin.firestore.FieldValue.serverTimestamp(),
     };
-    res.json({ success: true, data: projects[index] });
+
+    await projectsCollection.doc(req.params.id).update(updateData);
+
+    res.json({
+      success: true,
+      data: { id: req.params.id, ...updateData },
+    });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    console.error('Error updating project:', error);
+    res.status(500).json({ success: false, error: 'Failed to update project' });
   }
 };
 
 export const deleteProject = async (req, res) => {
   try {
-    const index = projects.findIndex(p => p.id === parseInt(req.params.id));
-    if (index === -1) {
-      return res.status(404).json({ success: false, error: 'Project not found' });
-    }
-    projects.splice(index, 1);
+    await projectsCollection.doc(req.params.id).delete();
     res.json({ success: true, message: 'Project deleted successfully' });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    console.error('Error deleting project:', error);
+    res.status(500).json({ success: false, error: 'Failed to delete project' });
   }
 };
