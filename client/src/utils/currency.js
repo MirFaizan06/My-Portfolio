@@ -11,6 +11,8 @@ export const SUPPORTED_CURRENCIES = {
   CHF: { symbol: 'CHF', name: 'Swiss Franc', flag: '🇨🇭' },
   CNY: { symbol: '¥', name: 'Chinese Yuan', flag: '🇨🇳' },
   AED: { symbol: 'د.إ', name: 'UAE Dirham', flag: '🇦🇪' },
+  PHP: { symbol: '₱', name: 'Philippine Peso', flag: '🇵🇭' },
+  IDR: { symbol: 'Rp', name: 'Indonesian Rupiah', flag: '🇮🇩' },
 };
 
 // Exchange rates relative to USD (updated periodically)
@@ -26,6 +28,8 @@ const BASE_RATES = {
   CHF: 0.88,
   CNY: 7.24,
   AED: 3.67,
+  PHP: 56.50,
+  IDR: 15680.00,
 };
 
 // Fetch live exchange rates from API
@@ -72,15 +76,17 @@ export const convertPrice = (priceInUSD, targetCurrency, rates = cachedRates) =>
   return priceInUSD * rates[targetCurrency];
 };
 
-// Format price with currency symbol and proper decimals
+// Format price with currency symbol and smart rounding
 export const formatPrice = (price, currency = 'USD') => {
   const currencyInfo = SUPPORTED_CURRENCIES[currency];
   if (!currencyInfo) {
     return `$${Math.round(price)}`;
   }
 
-  // Round to nearest whole number for cleaner display
-  const roundedPrice = Math.round(price);
+  // Smart rounding: round to nearest 100 for all currencies
+  // This makes prices cleaner and more professional
+  // Example: 74930 -> 74900, 1234 -> 1200
+  const roundedPrice = Math.round(price / 100) * 100;
 
   return `${currencyInfo.symbol}${roundedPrice.toLocaleString()}`;
 };

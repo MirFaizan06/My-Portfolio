@@ -5,11 +5,16 @@ const pricingCollection = db.collection('pricing');
 
 export const getAllPricing = async (req, res) => {
   try {
-    const snapshot = await pricingCollection.orderBy('createdAt', 'desc').get();
+    // Fetch all pricing plans and sort by price (low to high)
+    const snapshot = await pricingCollection.get();
     const pricing = [];
     snapshot.forEach((doc) => {
       pricing.push({ id: doc.id, ...doc.data() });
     });
+
+    // Sort by price in ascending order (low to high)
+    pricing.sort((a, b) => parseFloat(a.price) - parseFloat(b.price));
+
     res.json({ success: true, data: pricing });
   } catch (error) {
     console.error('Error fetching pricing:', error);
